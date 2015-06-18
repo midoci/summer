@@ -8,4 +8,7 @@ urlpatterns = patterns('',
     url(r'^hello$', 'summerManagement.views.hello',name='hello'),
     url(r'^2015summer$', 'summerManagement.views.summer',name='summer'),
     url(r'^dafuweng$', 'summerManagement.views.dafuweng',name='dafuweng'),
+    url(r'^getUserInfo$', 'summerManagement.views.getUserInfo',name='getUserInfo'),
+    
+    
     )

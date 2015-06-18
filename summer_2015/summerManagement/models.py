@@ -7,10 +7,8 @@ from _models.models import *
 from django.shortcuts import redirect
 import urllib
 
-APPID = 'wxf9e55c6e558ffd77'
-SECRET = "9086dc2e2e95a72cee3f48181ee9a4ce"
 
-
+u_id = 0
 class weixin(object):
     def __init__(self):
         pass
@@ -25,11 +23,15 @@ class weixin(object):
         if code:
             try:
                 user_info = self.getUnionID(appid=APPID, secret=SECRET, code=code)
+                u_id = u_id+1
                 print user_info
+                #if SummerUserInfo.objects.filter(u_id = u_id).exists():
+                #    s_user_info = SummerUserInfo.objects.filter(u_id = u_id)
+                
                 #这里预留 保存数据
             except Exception,e:
                 print e
-        
+        return u_id
     def getUnionID(self,appid=None, secret=None, code=None):
         userinfo = {}
         try:
@@ -50,5 +52,24 @@ class weixin(object):
             print e
             return {}
 
-    
-    
+        
+    def summer_user_info(self,request):
+        u_id = request.POST.get('u_id')
+        u_id = json.loads(u_id)
+        if SummerUserInfo.objects.filter(u_id = u_id).exists():
+            s_user_info = SummerUserInfo.objects.filter(u_id = u_id)
+            now_position = s_user_info[0].now_position
+            coin = s_user_info[0].coin
+        else:
+            try:
+                user_info = SummerUserInfo.objects.create(u_id = u_id,
+                                                          coin = 10,
+                                                          now_position = 0,
+                                                          last_play_time = datetime.datetime.now(),
+                                                          )
+                user_info.save()
+                now_position = 0
+                coin = 10
+            except Exception,e:
+                print e 
+        return now_position,coin

@@ -14,16 +14,18 @@ def hello(request):
     return HttpResponse('hello')
 
 def dafuweng(request):
-    weiXin.dafuweng(request)
-    return mp_render(request, "index.html")
+    u_id = weiXin.dafuweng(request)
+    return mp_render(request, "index.html",{'u_id':u_id})
 
 def summer(request):
     return weiXin.get_user_info(request)
 
 def admin(request):
-    return mp_render(request, "index.html")
+    return mp_render(request, "admin.html")
 
-
+def getUserInfo(request):
+    now_position,coin = weiXin.summer_user_info(request)
+    return HttpResponse(json.dumps({"now_position": now_position,"coin":coin}))
     
 
     
